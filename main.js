@@ -102,6 +102,10 @@ function initMap() {
         rotateControl: true
     });
 
+    state = {
+        selectedTab: '',
+    };
+
     initAutocomplete();
 }
 
@@ -114,7 +118,6 @@ function initPage() {
 
     openTab(null, 'map');
 }
-<<<<<<< Updated upstream
 
 function selectSearchInput() {
     document.getElementById('pac-input').focus();
@@ -123,5 +126,3 @@ function selectSearchInput() {
 function clearSearchText() {
     document.getElementById('pac-input').value = '';
 }
-=======
->>>>>>> Stashed changes
