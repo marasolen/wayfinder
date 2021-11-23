@@ -11,20 +11,33 @@ let map;
 let state;
 
 function openTab(_, tabName) {
-    const tabElements = document.getElementsByClassName('tab-content');
-    for (let i = 0; i < tabElements.length; i++) {
-        if (tabElements[i].id.includes(tabName)) {
-            tabElements[i].style.visibility = 'visible';
-        } else {
-            tabElements[i].style.visibility = 'hidden';
+    if (state.selectedTab === tabName) {
+        if (tabName === 'map') {
+            map.panTo(ubcCenter);
         }
-    }
+    } else {
+        const tabElements = document.getElementsByClassName('tab-content');
 
-    if (state.selectedTab === tabName && tabName === 'map') {
-        map.panTo(ubcCenter);
-    }
+        for (let i = 0; i < tabElements.length; i++) {
+            if (tabElements[i].id.includes(tabName)) {
+                tabElements[i].style.visibility = 'visible';
+            } else {
+                tabElements[i].style.visibility = 'hidden';
+            }
+        }
 
-    state.selectedTab = tabName;
+        const tabButtonElements = document.getElementsByClassName('tab-button');
+
+        for (let i = 0; i < tabButtonElements.length; i++) {
+            if (tabButtonElements[i].id.includes(tabName)) {
+                tabButtonElements[i].style.backgroundColor = '#d0d4d6';
+            } else {
+                tabButtonElements[i].style.backgroundColor = '#f8f9fa';
+            }
+        }
+
+        state.selectedTab = tabName;
+    }
 }
 
 function initMap() {
@@ -36,6 +49,8 @@ function initMap() {
     });
 
     state = {
-        selectedTab: 'map',
+        selectedTab: '',
     };
+
+    openTab(null, 'map');
 }
