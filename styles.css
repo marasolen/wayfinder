@@ -23,7 +23,7 @@ html, body {
 
 .tab-button {
     background-color: #f8f9fa;
-    border: 0px solid #f8f9fa;
+    border: 2px solid #d0d4d6;
     border-radius: 40px 40px 0 0;
     color: #3c4043;
     cursor: pointer;
@@ -57,7 +57,7 @@ html, body {
 
 #pac-input {
     background-color: #f8f9fa;
-    border: 0px solid #f8f9fa;
+    border: 2px solid #d0d4d6;
     border-radius: 6px;
     color: #3c4043;
     cursor: text;
