@@ -57,18 +57,18 @@ html, body {
 /* by id */
 
 #pac-input {
-    width: 80%;
     top: 2%;
     background-color: inherit;
     border: 0;
     color: #3c4043;
     cursor: text;
     font-family: arial, sans-serif;
-    font-size: 200%;
-    margin: auto;
+    font-size: 250%;
+    margin-left: 4%;
+    margin-right: 2%;
     text-overflow: ellipsis;
     align-self: center;
-    width: 90%;
+    width: 84%;
     height: 100%;
 }
 
@@ -104,4 +104,19 @@ html, body {
     display: flex;
     width: 100%;
     bottom: 0%;
+}
+
+#clear-text-button {
+    top: 2%;
+    background-color: inherit;
+    border: 0;
+    color: #8e8e8e;
+    cursor: text;
+    font-family: arial, sans-serif;
+    font-size: 250%;
+    margin: auto;
+    text-overflow: ellipsis;
+    align-self: center;
+    cursor: pointer;
+    width: 36px;
 }

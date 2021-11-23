@@ -109,3 +109,7 @@ function initPage() {
 function selectSearchInput() {
     document.getElementById('pac-input').focus();
 }
+
+function clearSearchText() {
+    document.getElementById('pac-input').value = '';
+}

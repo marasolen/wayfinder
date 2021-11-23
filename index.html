@@ -12,8 +12,9 @@
         <div id="map-container" class="tab-content" style="visibility: visible;">
             <div id="map"></div>
             <div id="search-container" onclick="selectSearchInput()">
-                <img src="images/search-icon.png" style="height:36px">
+                <img src="images/search-icon.png" style="height:36px;align-self: center;">
                 <input id="pac-input" class="controls" type="text" placeholder="Find Places and Directions"/>
+                <button id="clear-text-button" onclick="clearSearchText()">&#10799;</button>
             </div>
         </div>
         <div id="watchlist-container" class="tab-content" style="visibility: hidden;"></div>
