@@ -1,0 +1,55 @@
+/* by class */
+
+.tab-content {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.tab-button-container {
+    width: 33.33333%;
+    height: 100%;
+}
+
+.tab-button {
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    cursor: pointer;
+    font-family: arial, sans-serif;
+    font-size: 350%;
+    text-align: center;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: pre;
+    align-self: center;
+    margin: 0 auto;
+    padding: 4%;
+    display: block;
+    width: 80%;
+    height: 100%;
+}
+
+.tab-button:hover {
+    border-color: #dadce0;
+    box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+    color: #202124;
+}
+
+.tab-button:focus {
+    border-color: #4285f4;
+    outline: none;
+}
+
+/* by id */
+
+#tab-buttons {
+    position: fixed;
+    display: flex;
+    width: 100%;
+    bottom: 2%;
+}

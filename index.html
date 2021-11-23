@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html>
-<body>
+    <head>
+        <title>UBC Wayfinding</title>
 
-<h1>Hello!</h1>
-<p>This page is under construction.</p>
-
-</body>
+        <link href="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.css" type="text/css">
+        <link href="styles.css" rel="stylesheet" />
+        
+        <script src="https://api.mapbox.com/mapbox-gl-js/v2.6.0/mapbox-gl.js"></script>
+        <script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.7.2/mapbox-gl-geocoder.min.js"></script>
+        <script src="main.js"></script>
+    </head>
+    <body>
+        <div id="map-container" class="tab-content" style="visibility: visible;"></div>
+        <div id="watchlist-container" class="tab-content" style="visibility: hidden;"></div>
+        <div id="profile-container" class="tab-content" style="visibility: hidden;"></div>
+        <div id="tab-buttons">
+            <div class="tab-button-container">
+                <button class="tab-button" onclick="openTab(event, 'map')">Map</button>
+            </div>
+            <div class="tab-button-container">
+                <button class="tab-button" onclick="openTab(event, 'watchlist')">Watchlist</button>
+            </div>
+            <div class="tab-button-container">
+                <button class="tab-button" onclick="openTab(event, 'profile')">Profile</button>
+            </div>
+        </div>
+    </body>
 </html>
