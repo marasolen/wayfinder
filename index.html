@@ -1,36 +1,88 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>UBC Wayfinding</title>
-
-        <link href="styles.css" rel="stylesheet" />
-
-        <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
-        <script src="main.js"></script>
-    </head>
-    <body>
-        <div id="map-container" class="tab-content" style="visibility: visible;">
-            <div id="map"></div>
-            <div id="search-container" onclick="selectSearchInput()">
-                <img src="images/search-icon.png" style="height:36px;align-self: center;">
-                <input id="pac-input" class="controls" type="text" placeholder="Find Places and Directions"/>
-                <button id="clear-text-button" onclick="clearSearchText()">&#10799;</button>
-            </div>
+<head>
+    <title>UBC Wayfinding</title>
+    <link href="styles.css" rel="stylesheet" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+</head>
+<body>
+    <div id="map-container" class="tab-content" style="visibility: visible;">
+        <div id="map"></div>
+        <div id="search-container" onclick="selectSearchInput()">
+            <img src="images/search-icon.png" style="height:36px;align-self: center;">
+            <input id="pac-input" class="controls" type="text" placeholder="Find Places and Directions"/>
+            <button id="clear-text-button" onclick="clearSearchText()">&#10799;</button>
         </div>
-        <div id="watchlist-container" class="tab-content" style="visibility: hidden;"></div>
-        <div id="profile-container" class="tab-content" style="visibility: hidden;"></div>
-        <div id="tab-buttons">
-            <div class="tab-button-container">
-                <button id="map-tab-button" class="tab-button" onclick="openTab(event, 'map')">Map</button>
+    </div>
+    <div id="watchlist-container" class="tab-content" style="visibility: hidden;">
+        <div class="card">
+            <div style="width:78%; display:inline-block;">
+                <p class="tight">AMS Nest to Swing Space</p>
+                <p class="tight" style="font-size:220%">East Mall, University Blvd, West Mall</p>
+                <p class="tight" style="font-size:220%">Status: <b>clear</b></p>
             </div>
-            <div class="tab-button-container">
-                <button id="watchlist-tab-button" class="tab-button" onclick="openTab(event, 'watchlist')">Watchlist</button>
-            </div>
-            <div class="tab-button-container">
-                <button id="profile-tab-button" class="tab-button" onclick="openTab(event, 'profile')">Profile</button>
-            </div>
+            <button class="btn"><i class="fa fa-map-marker"></i></button>
+            <button class="btn"><i class="fa fa-trash"></i></button>
         </div>
-
-        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrfuzEk2zyTn7pRmXFcrYszF0bt9fioTw&callback=initPage&libraries=places&v=weekly" async></script>
-    </body>
+        <div class="card" style="background-color: #f7e6e4;">
+            <div style="width:78%; display:inline-block;">
+                <p class="tight">ICICS/CS to Irvine K. Barber</p>
+                <p class="tight" style="font-size:220%">Main Mall, Agronomy Rd., East Mall</p>
+                <p class="tight" style="font-size:220%">Status: <b>obstruction in path</b></p>
+            </div>
+            <button class="btn"><i class="fa fa-map-marker"></i></button>
+            <button class="btn"><i class="fa fa-trash"></i></button>
+        </div>
+        <div class="card" style="display:none;">
+            <div style="width:78%; display:inline-block;">
+                <p class="tight">AMS Nest to Swing Space</p>
+                <p class="tight" style="font-size:220%">East Mall, University Blvd, West Mall</p>
+                <p class="tight" style="font-size:220%">Status: <b>clear</b></p>
+            </div>
+            <button class="btn"><i class="fa fa-map-marker"></i></button>
+            <button class="btn"><i class="fa fa-trash"></i></button>
+        </div>
+    </div>
+    <div id="profile-container" class="tab-content" style="padding:5em; visibility: hidden;">
+        <p align="right" style="padding-right:5em; font-size:200%;">Logged in:</br>testCWL</p>
+        <h2>Route Preferences</h2>
+        <ul id="slippylist">
+            <li>Wheelchair-accessible</li>
+            <li>Fastest on foot</li>
+            <li>Shortest distance</li>
+            <li>Bus with least walking</li>
+            <li>Least elevation</li>
+        </ul>
+        </br>
+        <h2>Settings</h2>
+        <div>
+            <div class="onoffswitch" style="display: inline-block; float:left;">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="email" tabindex="0">
+                <label class="onoffswitch-label" for="email"></label>
+            </div>
+            <p class="toggle-label">Email notification of obstructions</p>
+        </div>
+        <div>
+            <div class="onoffswitch" style="display: inline-block; float:left;">
+                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="gps" tabindex="0">
+                <label class="onoffswitch-label" for="gps"></label>
+            </div>
+            <p class="toggle-label">My location tracking</p>
+        </div>
+    </div>
+    <div id="tab-buttons">
+        <div class="tab-button-container">
+            <button id="map-tab-button" class="tab-button" onclick="openTab(event, 'map')">Map</button>
+        </div>
+        <div class="tab-button-container">
+            <button id="watchlist-tab-button" class="tab-button" onclick="openTab(event, 'watchlist')">Watchlist</button>
+        </div>
+        <div class="tab-button-container">
+            <button id="profile-tab-button" class="tab-button" onclick="openTab(event, 'profile')">Profile</button>
+        </div>
+    </div>
+    <script src="https://pornel.net/slip/slip.js"></script>
+    <script src="main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrfuzEk2zyTn7pRmXFcrYszF0bt9fioTw&callback=initPage&libraries=places&=weekly" async></script>
+</body>
 </html>

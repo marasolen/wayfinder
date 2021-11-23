@@ -6,6 +6,9 @@ const startZoom = 14.5;
 
 // Objects
 let map;
+let places;
+let autocomplete;
+let pref;
 
 // State
 let state;
@@ -41,46 +44,29 @@ function openTab(_, tabName) {
     }
 }
 
-function initAutocomplete() {
+function requestAutocomplete() {
+    const request = {
+        input: document.getElementById('pac-input').value,
+        bounds: ubcBbox.latLngBounds,
+    };
 
-    // Create the search box and link it to the UI element.
-    const input = document.getElementById("pac-input");
-    const autocomplete = new google.maps.places.Autocomplete(input);
-
-    autocomplete.setOptions({
-        strictBounds: true,
-    });
-    autocomplete.setBounds(ubcBbox.latLngBounds);
-
-    const marker = new google.maps.Marker({
-        map,
-        anchorPoint: new google.maps.Point(0, -29),
-    });
-
-    // Listen for the event fired when the user selects a prediction and retrieve
-    // more details for that place.
-    autocomplete.addListener("place_changed", () => {
-        marker.setVisible(false);
-
-        const place = autocomplete.getPlace();
-
-        if (!place.geometry || !place.geometry.location) {
-            // User entered the name of a Place that was not suggested and
-            // pressed the Enter key, or the Place Details request failed.
-            window.alert("No details available for input: '" + place.name + "'");
-            return;
-        }
-
-        // If the place has a geometry, then present it on a map.
-        if (place.geometry.viewport) {
-            map.fitBounds(place.geometry.viewport);
-        } else {
-            map.setZoom(17);
-            map.panTo(place.geometry.location);
-        }
-
-        marker.setPosition(place.geometry.location);
-        marker.setVisible(true);
+    autocomplete.getPlacePredictions(request, results => {
+        results = results.forEach((item, i) => {
+            places.getDetails({ placeId: item.place_id }, (itemDetails, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    console.log(itemDetails);
+                    const lat = itemDetails.geometry.location.lat();
+                    const lng = itemDetails.geometry.location.lng();
+                    const north = ubcBbox.latLngBounds.north;
+                    const south = ubcBbox.latLngBounds.south;
+                    const east = ubcBbox.latLngBounds.east;
+                    const west = ubcBbox.latLngBounds.west;
+                    if (north >= lat && lat >= south && east >= lng && lng >= west) {
+                        console.log("yes");
+                    }
+                }
+            });
+        });
     });
 }
 
@@ -93,11 +79,21 @@ function initMap() {
         rotateControl: true
     });
 
-    initAutocomplete();
+    places = new google.maps.places.PlacesService(map);
+
+    autocomplete = new google.maps.places.AutocompleteService();
+    document.getElementById('pac-input').onchange = requestAutocomplete;
 }
 
 function initPage() {
     initMap();
+    pref = document.getElementById('slippylist');
+    new Slip(pref);
+    pref.addEventListener('slip:reorder', function(e) {
+           e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+           console.log(pref);
+           return false;
+    }, false);
 
     state = {
         selectedTab: '',
