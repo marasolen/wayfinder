@@ -30,7 +30,7 @@ function openTab(_, tabName) {
 
         for (let i = 0; i < tabButtonElements.length; i++) {
             if (tabButtonElements[i].id.includes(tabName)) {
-                tabButtonElements[i].style.backgroundColor = '#d0d4d6';
+                tabButtonElements[i].style.backgroundColor = '#cae1ed';
             } else {
                 tabButtonElements[i].style.backgroundColor = '#f8f9fa';
             }
@@ -41,11 +41,12 @@ function openTab(_, tabName) {
 }
 
 function initMap() {
-    map = new google.maps.Map(document.getElementById("map"), {
+    map = new google.maps.Map(document.getElementById('map'), {
         center: ubcCenter,
         zoom: startZoom,
         restriction: ubcBbox,
-        disableDefaultUI: true
+        disableDefaultUI: true,
+        rotateControl: true
     });
 
     state = {
@@ -53,4 +54,8 @@ function initMap() {
     };
 
     openTab(null, 'map');
+}
+
+function selectSearchInput() {
+    document.getElementById('pac-input').focus();
 }

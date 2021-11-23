@@ -23,8 +23,8 @@ html, body {
 
 .tab-button {
     background-color: #f8f9fa;
-    border: 2px solid #d0d4d6;
     border-radius: 40px 40px 0 0;
+    border: 0;
     color: #3c4043;
     cursor: pointer;
     font-family: arial, sans-serif;
@@ -32,50 +32,66 @@ html, body {
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     white-space: pre;
     align-self: center;
     margin: 0 auto;
     padding: 4%;
     display: block;
-    width: 80%;
+    width: 90%;
     height: 100%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
 }
 
 .tab-button:hover {
-    border-color: #dadce0;
-    box-shadow: rgba(0, 0, 0, .1) 0 1px 1px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
     color: #202124;
+    background-color: #d0d4d6;
 }
 
 .tab-button:focus {
-    border-color: #4285f4;
     outline: none;
 }
 
 /* by id */
 
 #pac-input {
-    background-color: #f8f9fa;
-    border: 2px solid #d0d4d6;
-    border-radius: 6px;
+    width: 80%;
+    top: 2%;
+    background-color: none;
+    border: 0;
     color: #3c4043;
     cursor: text;
     font-family: arial, sans-serif;
     font-size: 300%;
-    margin: 0 auto;
-    padding: 2%;
+    margin: auto;
     text-overflow: ellipsis;
     align-self: center;
-    width: 86%;
+    width: 90%;
     height: 100%;
+}
+
+#pac-input:focus {
+    outline: none;
 }
 
 #search-container {
     position: fixed;
     display: flex;
-    width: 100%;
     top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fcfcfc;
+    border-radius: 60px;
+    border: 0;
+    cursor: text;
+    margin: 0 auto;
+    padding: 2%;
+    text-overflow: ellipsis;
+    width: 86%;
+    height: 5%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
 }
 
 #map {
