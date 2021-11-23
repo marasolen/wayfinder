@@ -59,12 +59,12 @@ html, body {
 #pac-input {
     width: 80%;
     top: 2%;
-    background-color: none;
+    background-color: inherit;
     border: 0;
     color: #3c4043;
     cursor: text;
     font-family: arial, sans-serif;
-    font-size: 300%;
+    font-size: 200%;
     margin: auto;
     text-overflow: ellipsis;
     align-self: center;
@@ -90,7 +90,6 @@ html, body {
     padding: 2%;
     text-overflow: ellipsis;
     width: 86%;
-    height: 5%;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
 }
 
