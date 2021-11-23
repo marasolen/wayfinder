@@ -62,7 +62,7 @@ function requestAutocomplete() {
                     const east = ubcBbox.latLngBounds.east;
                     const west = ubcBbox.latLngBounds.west;
                     if (north >= lat && lat >= south && east >= lng && lng >= west) {
-                        console.log("yes");
+
                     }
                 }
             });

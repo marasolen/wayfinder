@@ -167,6 +167,10 @@ h2 {
     min-width: 70px;
 }
 
+.btn trash {
+    background-color: black;
+}
+
 /* by id */
 
 #slippylist li {
