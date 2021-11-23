@@ -10,6 +10,15 @@ let map;
 // State
 let state;
 
+// Draggable list
+var pref = document.getElementById('slippylist');
+new Slip(pref);
+pref.addEventListener('slip:reorder', function(e){
+        e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
+        console.log(pref);
+        return false;
+}, false);
+
 function openTab(_, tabName) {
     if (state.selectedTab === tabName) {
         if (tabName === 'map') {
@@ -105,6 +114,7 @@ function initPage() {
 
     openTab(null, 'map');
 }
+<<<<<<< Updated upstream
 
 function selectSearchInput() {
     document.getElementById('pac-input').focus();
@@ -113,3 +123,5 @@ function selectSearchInput() {
 function clearSearchText() {
     document.getElementById('pac-input').value = '';
 }
+=======
+>>>>>>> Stashed changes
