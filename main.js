@@ -19,8 +19,12 @@ const obstructions = [
 let map;
 let places;
 let autocomplete;
+let directions;
+let directionsRenderer;
 let pref;
-let marker;
+let gpsMarker;
+let searchMarker;
+let destinationMarker;
 
 // State
 let state;
@@ -54,11 +58,11 @@ function openTab(_, tabName) {
         state.selectedTab = tabName;
 
          // if opening map, check whether to turn on self-marker
-        if (tabName == 'map'){
+        if (tabName == 'map' && gpsMarker) {
             if (document.getElementById('gps').checked == false)
-                marker.setVisible(false);
+                gpsMarker.setVisible(false);
             else
-                marker.setVisible(true);
+                gpsMarker.setVisible(true);
         }
     }
 }
@@ -89,6 +93,65 @@ function requestAutocomplete() {
                     resultDiv.classList.add('search-result-underline');
                 }
                 resultDiv.innerHTML = item.description;
+
+                resultDiv.onclick = () => {
+                    map.panToBounds(item.geometry.viewport);
+                    
+                    if (searchMarker) {
+                        searchMarker.setMap(null);
+                    }
+                    searchMarker = new google.maps.Marker({
+                        position: item.geometry.location,
+                        map: map,
+                        icon: {
+                            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                            scale: 10,
+                            fillOpacity: 1,
+                            strokeWeight: 5,
+                            fillColor: '#17ba0f',
+                            strokeColor: '#ffffff',
+                        },
+                    });
+
+                    if (destinationMarker && destinationMarker.getMap() !== null) {
+                        resultContainer.style.visibility = 'hidden';
+                        document.getElementById('pac-input').onfocus = () => {
+                            resultContainer.style.visibility = 'visible';
+                            document.getElementById('pac-input').onfocus = () => null;
+                        };
+                        
+                        directions.route({
+                            destination: destinationMarker.getPosition(),
+                            origin: searchMarker.getPosition(),
+                            travelMode: google.maps.TravelMode.WALKING,
+                            provideRouteAlternatives: true
+                        }).then(result => {
+                            console.log(result);
+                            if (result.status === google.maps.DirectionsStatus.OK) {
+                                directionsRenderer.setDirections(result);
+                                directionsRenderer.setMap(map);
+                                document.getElementById('directions').style.visibility = 'visible';
+                            }
+                        });
+                    } else {
+                        searchMarker.setClickable(true);
+                        searchMarker.addListener('click', () => {
+                            destinationMarker = new google.maps.Marker({
+                                position: searchMarker.getPosition(),
+                                map: map,
+                                icon: {
+                                    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                                    scale: 10,
+                                    fillOpacity: 1,
+                                    strokeWeight: 5,
+                                    fillColor: '#f51bf1',
+                                    strokeColor: '#ffffff',
+                                },
+                            });
+                            searchMarker.setMap(null);
+                        })
+                    }
+                };
                 resultContainer.appendChild(resultDiv);
             });
         } else {
@@ -131,6 +194,21 @@ function requestAutocomplete() {
                 const west = ubcBbox.latLngBounds.west;
                 return north >= lat && lat >= south && east >= lng && lng >= west;
             });
+        }));
+
+        Promise.all(promises).then(detailResults => {
+            detailResults = detailResults.filter(itemDetails => {
+                if (itemDetails === null) {
+                    return false;
+                }
+                const lat = itemDetails.geometry.location.lat();
+                const lng = itemDetails.geometry.location.lng();
+                const north = ubcBbox.latLngBounds.north;
+                const south = ubcBbox.latLngBounds.south;
+                const east = ubcBbox.latLngBounds.east;
+                const west = ubcBbox.latLngBounds.west;
+                return north >= lat && lat >= south && east >= lng && lng >= west;
+            });
 
             state.previousSearches[request.input] = detailResults;
             addResults(detailResults);
@@ -154,17 +232,12 @@ function initMap() {
     autocomplete = new google.maps.places.AutocompleteService();
     document.getElementById('pac-input').oninput = requestAutocomplete;
 
-    marker = new google.maps.Marker({
-        position: icics,
+    directions = new google.maps.DirectionsService();
+    directionsRenderer = new google.maps.DirectionsRenderer({
         map: map,
-        icon: {
-            path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-            scale: 15,
-            fillOpacity: 1,
-            strokeWeight: 5,
-            fillColor: '#0390fc',
-            strokeColor: '#ffffff',
-        },
+        panel: document.getElementById('directions'),
+        suppressMarkers: true,
+        preserveViewport: true
     });
 
     initObstructions();
@@ -203,6 +276,40 @@ function initPage() {
     };
 
     openTab(null, 'map');
+
+    setInterval(function() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (position) => {
+                const pos = {
+                  lat: position.coords.latitude,
+                  lng: position.coords.longitude,
+                };
+
+                if (gpsMarker) {
+                    gpsMarker.setMap(null);
+                }
+
+                gpsMarker = new google.maps.Marker({
+                    position: pos,
+                    map: map,
+                    icon: {
+                        path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                        scale: 10,
+                        fillOpacity: 1,
+                        strokeWeight: 5,
+                        fillColor: '#0390fc',
+                        strokeColor: '#ffffff',
+                    },
+                });
+      
+              },
+              () => {
+                  console.log('Failed to get GPS coordinates.')
+              }
+            );
+          }
+    }, 60 * 1000);
 }
 
 function selectSearchInput() {
@@ -212,4 +319,14 @@ function selectSearchInput() {
 function clearSearchText() {
     document.getElementById('pac-input').value = '';
     requestAutocomplete();
+
+    if (searchMarker) {
+        searchMarker.setMap(null);
+    }
+    if (destinationMarker) {
+        destinationMarker.setMap(null);
+    }
+    directionsRenderer.setMap(null);
+    document.getElementById('directions').style.visibility = 'hidden';
+    document.getElementById('pac-input').onfocus = () => null;
 }
