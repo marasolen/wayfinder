@@ -27,6 +27,8 @@ let gpsMarker;
 let frLoc;
 let toLoc;
 
+let watchlist = [];
+
 // State
 let state;
 
@@ -68,6 +70,63 @@ function openTab(_, tabName) {
     }
 }
 
+function isOnObstruction(polyline) {
+    for (let i = 0; i < obstructions.length; i++) {
+        if (google.maps.geometry.poly.isLocationOnEdge(obstructions[i], polyline, 5 * 10e-5)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function checkRoutes(result) {
+    let promises = [];
+    console.log(result.routes);
+    result.routes.forEach(route => {
+        promises.push(new Promise((resolve => {
+            const polyline = new google.maps.Polyline({
+                path: route.overview_path
+            });
+            if (isOnObstruction(polyline)) {
+                resolve(null);
+            }
+            resolve(route);
+        })));
+    });
+
+    return new Promise((resolve, _) => {
+        Promise.all(promises).then(routes => {
+            console.log(routes);
+            result.routes = routes.filter(r => r !== null);
+            resolve(result);
+        });
+    });
+}
+
+function showDirections() {
+    const resultContainer = document.getElementById('search-results-container');
+    resultContainer.style.visibility = 'hidden';
+    document.getElementById('pac-input').onfocus = () => {
+        resultContainer.style.visibility = 'visible';
+        document.getElementById('pac-input').onfocus = () => null;
+    };
+    
+    directions.route({
+        destination: toLoc.marker.getPosition(),
+        origin: frLoc.marker.getPosition(),
+        travelMode: google.maps.TravelMode.WALKING,
+        provideRouteAlternatives: true
+    }).then(result => {
+        if (result.status === google.maps.DirectionsStatus.OK) {
+            checkRoutes(result).then(validRoutes => {
+                    directionsRenderer.setDirections(validRoutes);
+                    directionsRenderer.setMap(map);
+                    document.getElementById('directions').style.visibility = 'visible';
+            });
+        }
+    });
+}
+
 function setToLoc(name, latLng) {
     clearLoc(toLoc);
     toLoc.marker.setPosition(latLng);
@@ -78,27 +137,9 @@ function setToLoc(name, latLng) {
     if (frLoc.active) {
         if (frLoc.name === toLoc.name) {
             clearLoc(frLoc);
-            return;
+        } else {
+            showDirections();
         }
-        const resultContainer = document.getElementById('search-results-container');
-        resultContainer.style.visibility = 'hidden';
-        document.getElementById('pac-input').onfocus = () => {
-            resultContainer.style.visibility = 'visible';
-            document.getElementById('pac-input').onfocus = () => null;
-        };
-        
-        directions.route({
-            destination: toLoc.marker.getPosition(),
-            origin: frLoc.marker.getPosition(),
-            travelMode: google.maps.TravelMode.WALKING,
-            provideRouteAlternatives: true
-        }).then(result => {
-            if (result.status === google.maps.DirectionsStatus.OK) {
-                directionsRenderer.setDirections(result);
-                directionsRenderer.setMap(map);
-                document.getElementById('directions').style.visibility = 'visible';
-            }
-        });
     }
 
 }
@@ -113,27 +154,9 @@ function setFrLoc(name, latLng) {
     if (toLoc.active) {
         if (frLoc.name === toLoc.name) {
             clearLoc(toLoc);
-            return;
+        } else {
+            showDirections();
         }
-        const resultContainer = document.getElementById('search-results-container');
-        resultContainer.style.visibility = 'hidden';
-        document.getElementById('pac-input').onfocus = () => {
-            resultContainer.style.visibility = 'visible';
-            document.getElementById('pac-input').onfocus = () => null;
-        };
-        
-        directions.route({
-            destination: toLoc.marker.getPosition(),
-            origin: frLoc.marker.getPosition(),
-            travelMode: google.maps.TravelMode.WALKING,
-            provideRouteAlternatives: true
-        }).then(result => {
-            if (result.status === google.maps.DirectionsStatus.OK) {
-                directionsRenderer.setDirections(result);
-                directionsRenderer.setMap(map);
-                document.getElementById('directions').style.visibility = 'visible';
-            }
-        });
     }
 
 }
@@ -249,6 +272,7 @@ function initMap() {
         restriction: ubcBbox,
         disableDefaultUI: true,
         rotateControl: true,
+        heading: 90,
     });
 
     places = new google.maps.places.PlacesService(map);
