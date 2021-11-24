@@ -15,36 +15,10 @@
             <input id="pac-input" class="controls" type="text" autocomplete="off" placeholder="Find Places and Directions"/>
             <button id="clear-text-button" onclick="clearSearchText()">&#10799;</button>
         </div>
+        <button style="position: fixed; top: 8%; right: 8%; font-size:200%;" id="add-route" onclick="addThisRoute()">Add to Watchlist</button>
         <div id="search-results-container"></div>
     </div>
     <div id="watchlist-container" class="tab-content" style="visibility: hidden;">
-        <div class="card" id="card1">
-            <div style="width:78%; display:inline-block;">
-                <p class="tight">AMS Nest to Swing Space</p>
-                <p class="tight" style="font-size:220%">East Mall, University Blvd, West Mall</p>
-                <p class="tight" style="font-size:220%">Status: <b>clear</b></p>
-            </div>
-            <button class="btn" onclick="openTab(event, 'map')"><i class="fa fa-map-marker"></i></button>
-            <button class="btn" onclick="document.getElementById('card1').style.display = 'none'"><i class="fa fa-trash"></i></button>
-        </div>
-        <div class="card" style="background-color: #f7e6e4;">
-            <div style="width:78%; display:inline-block;">
-                <p class="tight">ICICS/CS to Irvine K. Barber</p>
-                <p class="tight" style="font-size:220%">Main Mall, Agronomy Rd., East Mall</p>
-                <p class="tight" style="font-size:220%">Status: <b>obstruction in path</b></p>
-            </div>
-            <button class="btn" onclick="openTab(event, 'map')"><i class="fa fa-map-marker"></i></button>
-            <button class="btn" onclick="document.getElementById('card1').style.display = 'none'"><i class="fa fa-trash"></i></button>
-        </div>
-        <div class="card" style="display:none;">
-            <div style="width:78%; display:inline-block;">
-                <p class="tight">AMS Nest to Swing Space</p>
-                <p class="tight" style="font-size:220%">East Mall, University Blvd, West Mall</p>
-                <p class="tight" style="font-size:220%">Status: <b>clear</b></p>
-            </div>
-            <button class="btn" onclick="openTab(event, 'map')"><i class="fa fa-map-marker"></i></button>
-            <button class="btn" onclick="document.getElementById('card1').style.display = 'none'"><i class="fa fa-trash"></i></button>
-        </div>
     </div>
     <div id="profile-container" class="tab-content" style="padding:5em; visibility: hidden;">
         <p align="right" style="padding-right:5em; font-size:200%;">Logged in:</br>testCWL</p>

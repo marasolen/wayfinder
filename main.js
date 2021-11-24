@@ -25,6 +25,7 @@ let pref;
 let gpsMarker;
 let searchMarker;
 let destinationMarker;
+let cards = [];
 
 // State
 let state;
@@ -93,7 +94,6 @@ function requestAutocomplete() {
                     resultDiv.classList.add('search-result-underline');
                 }
                 resultDiv.innerHTML = item.description;
-
                 resultDiv.onclick = () => {
                     map.panToBounds(item.geometry.viewport);
                     
@@ -178,21 +178,6 @@ function requestAutocomplete() {
                 } else {
                     resolve(null)
                 }
-            });
-        }));
-
-        Promise.all(promises).then(detailResults => {
-            detailResults = detailResults.filter(itemDetails => {
-                if (itemDetails === null) {
-                    return false;
-                }
-                const lat = itemDetails.geometry.location.lat();
-                const lng = itemDetails.geometry.location.lng();
-                const north = ubcBbox.latLngBounds.north;
-                const south = ubcBbox.latLngBounds.south;
-                const east = ubcBbox.latLngBounds.east;
-                const west = ubcBbox.latLngBounds.west;
-                return north >= lat && lat >= south && east >= lng && lng >= west;
             });
         }));
 
@@ -329,4 +314,45 @@ function clearSearchText() {
     directionsRenderer.setMap(null);
     document.getElementById('directions').style.visibility = 'hidden';
     document.getElementById('pac-input').onfocus = () => null;
+}
+
+function addThisRoute(){
+    // get two endpoints
+    // get route and route's summary
+    // check if route has obstructions
+    // call addToWatchlist
+}
+
+function addToWatchlist(destinations, route, status){
+    var id = cards.length;
+    var parent = document.getElementById("watchlist-container")
+	var card = document.createElement("div");
+    card.setAttribute("class", "card");
+    card.setAttribute("id", id);
+    if (status != "clear")
+        card.setAttribute("style", "background-color: #f7e6e4;");
+
+    // text on the left half
+    let inner = document.createElement("div");
+    inner.setAttribute("style", "width:78%; display:inline-block;");
+    inner.innerHTML = "<p class='tight'>" + destinations + "</p> \
+        <p class='tight' style='font-size:220%'>" + route + "</p> \
+        <p class='tight' style='font-size:220%'>Status: <b>" + status + "</b></p>";
+
+    // buttons on the right half
+    let mapBtn = document.createElement("button");
+    mapBtn.setAttribute("class", "btn");
+    mapBtn.setAttribute("onclick", "openTab(event, 'map')"); // TODO: actually show the route
+    mapBtn.innerHTML = "<i class='fa fa-map-marker'></i>";
+    
+    let delBtn = document.createElement("button");
+    delBtn.setAttribute("class", "btn");
+    delBtn.setAttribute("onclick", "document.getElementById("+ id +").style.display = 'none'");
+    delBtn.innerHTML = "<i class='fa fa-trash'></i>";
+
+    card.appendChild(inner);
+    card.appendChild(mapBtn);
+    card.appendChild(delBtn);
+    parent.appendChild(card);
+    cards.push(card);
 }
