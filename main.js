@@ -33,10 +33,8 @@ function openTab(_, tabName) {
         const tabButtonElements = document.getElementsByClassName('tab-button');
 
         for (let i = 0; i < tabButtonElements.length; i++) {
-            if (tabButtonElements[i].id.includes(tabName)) {
-                tabButtonElements[i].style.backgroundColor = '#cae1ed';
-            } else {
-                tabButtonElements[i].style.backgroundColor = '#f8f9fa';
+            if (tabButtonElements[i].id.includes(tabName) || tabButtonElements[i].id.includes(state.selectedTab)) {
+                tabButtonElements[i].classList.toggle('tab-button-selected');
             }
         }
 
@@ -50,25 +48,77 @@ function requestAutocomplete() {
         bounds: ubcBbox.latLngBounds,
     };
 
-    autocomplete.getPlacePredictions(request, results => {
-        results = results.forEach((item, i) => {
-            places.getDetails({ placeId: item.place_id }, (itemDetails, status) => {
-                if (status === google.maps.places.PlacesServiceStatus.OK) {
-                    console.log(itemDetails);
-                    const lat = itemDetails.geometry.location.lat();
-                    const lng = itemDetails.geometry.location.lng();
-                    const north = ubcBbox.latLngBounds.north;
-                    const south = ubcBbox.latLngBounds.south;
-                    const east = ubcBbox.latLngBounds.east;
-                    const west = ubcBbox.latLngBounds.west;
-                    if (north >= lat && lat >= south && east >= lng && lng >= west) {
+    const resultContainer = document.getElementById('search-results-container');
 
-                    }
+    if (request.input === '') {
+        resultContainer.innerHTML = '';
+        resultContainer.style.visibility = 'hidden';
+        return;
+    }
+
+    const addResults = detailResults => {
+        resultContainer.innerHTML = '';
+        if (detailResults.length > 0) {
+            resultContainer.style.visibility = 'visible';
+
+            detailResults.forEach((item, i) => {
+                const resultDiv = document.createElement('button');
+                resultDiv.classList.add('search-result');
+                if (i < detailResults.length - 1) {
+                    resultDiv.classList.add('search-result-underline');
+                }
+                resultDiv.innerHTML = item.description;
+                console.log(resultDiv.innerHTML);
+                resultContainer.appendChild(resultDiv);
+            });
+        } else {
+            resultContainer.style.visibility = 'hidden';
+        }
+    }
+
+    if (request.input in state.previousSearches) {
+        addResults(state.previousSearches[request.input]);
+        return;
+    }
+
+    autocomplete.getPlacePredictions(request, results => {
+        if (results === null) {
+            resultContainer.innerHTML = '';
+            resultContainer.style.visibility = 'hidden';
+            return;
+        }
+        let promises = [...Array(results.length).keys()].map(i => new Promise((resolve, reject) => {
+            places.getDetails({ placeId: results[i].place_id }, (itemDetails, status) => {
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    itemDetails.description = results[i].description;
+                    resolve(itemDetails);
+                } else {
+                    resolve(null)
                 }
             });
+        }));
+
+        Promise.all(promises).then(detailResults => {
+            detailResults = detailResults.filter(itemDetails => {
+                if (itemDetails === null) {
+                    return false;
+                }
+                const lat = itemDetails.geometry.location.lat();
+                const lng = itemDetails.geometry.location.lng();
+                const north = ubcBbox.latLngBounds.north;
+                const south = ubcBbox.latLngBounds.south;
+                const east = ubcBbox.latLngBounds.east;
+                const west = ubcBbox.latLngBounds.west;
+                return north >= lat && lat >= south && east >= lng && lng >= west;
+            });
+
+            state.previousSearches[request.input] = detailResults;
+            addResults(detailResults);
         });
     });
 }
+
+
 
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
@@ -82,7 +132,7 @@ function initMap() {
     places = new google.maps.places.PlacesService(map);
 
     autocomplete = new google.maps.places.AutocompleteService();
-    document.getElementById('pac-input').onchange = requestAutocomplete;
+    document.getElementById('pac-input').oninput = requestAutocomplete;
 }
 
 function initPage() {
@@ -96,7 +146,8 @@ function initPage() {
     }, false);
 
     state = {
-        selectedTab: '',
+        selectedTab: 'none',
+        previousSearches: {'': []}
     };
 
     openTab(null, 'map');
@@ -108,4 +159,5 @@ function selectSearchInput() {
 
 function clearSearchText() {
     document.getElementById('pac-input').value = '';
+    requestAutocomplete();
 }

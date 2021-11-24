@@ -32,7 +32,7 @@ h2 {
 }
 
 .tab-button {
-    background-color: #f8f9fa;
+    background-color: #fcfcfc;
     border-radius: 40px 40px 0 0;
     border: 0;
     color: #3c4043;
@@ -55,13 +55,15 @@ h2 {
 }
 
 .tab-button:hover {
-    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
-    color: #202124;
-    background-color: #d0d4d6;
+    background-color: #eeeeee;
 }
 
 .tab-button:focus {
     outline: none;
+}
+
+.tab-button-selected {
+    background-color: #cae1ed;
 }
 
 /* Drag and drop */
@@ -171,6 +173,31 @@ h2 {
     background-color: black;
 }
 
+.search-result {
+    width: 100%;
+    font-size: 150%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    background-color: inherit;
+    border-radius: 10px;
+    outline: none;
+    cursor: pointer;
+    color: #3c4043;
+    border: 0;
+    text-align: left;
+    padding-top: 6px;
+    padding-bottom: 6px;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 4px 0px;
+}
+
+.search-result:hover {
+    background-color: #eeeeee;
+}
+
+.search-result-underline {
+    margin-bottom: 8px;
+}
+
 /* by id */
 
 #slippylist li {
@@ -229,6 +256,23 @@ h2 {
     text-overflow: ellipsis;
     width: 86%;
     max-height: 6%;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
+}
+
+#search-results-container {
+    visibility: hidden;
+    position: fixed;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #fcfcfc;
+    border-radius: 20px;
+    border: 0;
+    margin: 0 auto;
+    padding: 2%;
+    text-overflow: ellipsis;
+    width: 86%;
+    max-height: 60%;
     box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
 }
 
