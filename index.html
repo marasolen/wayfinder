@@ -11,9 +11,10 @@
         <div id="map"></div>
         <div id="search-container" onclick="selectSearchInput()">
             <img src="images/search-icon.png" style="height:36px;align-self: center;">
-            <input id="pac-input" class="controls" type="text" placeholder="Find Places and Directions"/>
+            <input id="pac-input" class="controls" type="text" autocomplete="off" placeholder="Find Places and Directions"/>
             <button id="clear-text-button" onclick="clearSearchText()">&#10799;</button>
         </div>
+        <div id="search-results-container"></div>
     </div>
     <div id="watchlist-container" class="tab-content" style="visibility: hidden;">
         <div class="card" id="card1">
@@ -83,7 +84,7 @@
             <button id="profile-tab-button" class="tab-button" onclick="openTab(event, 'profile')">Profile</button>
         </div>
     </div>
-    
+
     <script src="https://pornel.net/slip/slip.js"></script>
     <script src="main.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrfuzEk2zyTn7pRmXFcrYszF0bt9fioTw&callback=initPage&libraries=places&=weekly" async></script>
