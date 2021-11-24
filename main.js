@@ -14,6 +14,7 @@ let pref;
 let state;
 
 function openTab(_, tabName) {
+    clearSearchText();
     if (state.selectedTab === tabName) {
         if (tabName === 'map') {
             map.panTo(ubcCenter);
@@ -68,7 +69,6 @@ function requestAutocomplete() {
                     resultDiv.classList.add('search-result-underline');
                 }
                 resultDiv.innerHTML = item.description;
-                console.log(resultDiv.innerHTML);
                 resultContainer.appendChild(resultDiv);
             });
         } else {
