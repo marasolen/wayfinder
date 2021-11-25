@@ -195,6 +195,17 @@ function requestAutocomplete() {
                 textDiv.style.width = '50%';
                 resultDiv.appendChild(textDiv);
 
+				const frDiv = document.createElement('button');
+                frDiv.innerHTML = 'leave from';
+                frDiv.classList.add('go-button');
+                frDiv.onclick = () => {
+                    map.panToBounds(item.geometry.viewport);
+                    
+                    clearLoc(frLoc);
+                    setFrLoc(item.description, item.geometry.location);
+                };
+                resultDiv.appendChild(frDiv);
+				
                 const toDiv = document.createElement('button');
                 toDiv.innerHTML = 'go to';
                 toDiv.classList.add('go-button');
@@ -205,17 +216,6 @@ function requestAutocomplete() {
                     setToLoc(item.description, item.geometry.location);
                 };
                 resultDiv.appendChild(toDiv);
-
-                const frDiv = document.createElement('button');
-                frDiv.innerHTML = 'go from';
-                frDiv.classList.add('go-button');
-                frDiv.onclick = () => {
-                    map.panToBounds(item.geometry.viewport);
-                    
-                    clearLoc(frLoc);
-                    setFrLoc(item.description, item.geometry.location);
-                };
-                resultDiv.appendChild(frDiv);
 
                 resultContainer.appendChild(resultDiv);
             });
