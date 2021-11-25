@@ -149,15 +149,15 @@ td {
 .tight {
     /*text-align: center;*/
     margin-left: 30px;
-    margin-top: .5em;
-    margin-bottom: .5em;
+    margin-top: .6em;
+    margin-bottom: .4em;
 }
 
 .card {
     margin: 2em;
     border: 2px solid #d0d4d6;
     border-radius: 10px;
-    max-height: 12em;
+    min-height: 12em;
     padding-top: .5em;
     padding-bottom: 1em;
     background-color: #e4f7e4;

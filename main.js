@@ -23,6 +23,7 @@ let directions;
 let directionsRenderer;
 let pref;
 let gpsMarker;
+let cards = [];
 
 let frLoc;
 let toLoc;
@@ -125,6 +126,8 @@ function showDirections() {
             });
         }
     });
+	
+	document.getElementById("add-route").style.visibility = 'visible';
 }
 
 function setToLoc(name, latLng) {
@@ -263,8 +266,6 @@ function requestAutocomplete() {
     });
 }
 
-
-
 function initMap() {
     map = new google.maps.Map(document.getElementById('map'), {
         center: ubcCenter,
@@ -318,6 +319,10 @@ function initMap() {
         name: null,
         active: false
     };
+	
+	// one dummy watchlist entry
+	// TODO: add whatever info needed to watchlist[] and pass that to addToWatchlist
+	addToWatchlist("ICICS Building to AMS Student Nest", "E Mall S and Main Mall", "path obstructed");
 }
 
 function initObstructions() {
@@ -407,4 +412,57 @@ function clearLoc(loc) {
     loc.marker.setMap(null);
     loc.name = null;
     loc.active = false;
+	document.getElementById("add-route").style.visibility = 'hidden';
+}
+
+function addThisRoute(){
+    // get two endpoints, route and route's summary
+	let destinations = frLoc.name.split(",")[0] + " to " + toLoc.name.split(",")[0];
+	let route = "TBD";
+	
+    // check if route has obstructions
+	let status = "clear"; // default to clear for now
+	/* if(isOnObstruction(polyline) == true)
+		let status = "path obstructed";
+	else
+		let status = "clear";*/
+	
+    // call addToWatchlist
+	addToWatchlist(destinations, route, status);
+	
+	// save whatever info needed to show alternative routes in watchlist[]
+}
+
+function addToWatchlist(destinations, route, status){
+    var id = cards.length;
+    var parent = document.getElementById("watchlist-container")
+	var card = document.createElement("div");
+    card.setAttribute("class", "card");
+    card.setAttribute("id", id);
+    if (status != "clear")
+        card.setAttribute("style", "background-color: #f7e6e4;");
+
+    // text on the left half
+    let inner = document.createElement("div");
+    inner.setAttribute("style", "width:78%; display:inline-block;");
+    inner.innerHTML = "<p class='tight'>" + destinations + "</p> \
+        <p class='tight' style='font-size:220%'>" + route + "</p> \
+        <p class='tight' style='font-size:220%'>Status: <b>" + status + "</b></p>";
+
+    // buttons on the right half
+    let mapBtn = document.createElement("button");
+    mapBtn.setAttribute("class", "btn");
+    mapBtn.setAttribute("onclick", "openTab(event, 'map')"); // TODO: actually show the route
+    mapBtn.innerHTML = "<i class='fa fa-map-marker'></i>";
+    
+    let delBtn = document.createElement("button");
+    delBtn.setAttribute("class", "btn");
+    delBtn.setAttribute("onclick", "document.getElementById("+ id +").style.display = 'none'");
+    delBtn.innerHTML = "<i class='fa fa-trash'></i>";
+
+    card.appendChild(inner);
+    card.appendChild(mapBtn);
+    card.appendChild(delBtn);
+    parent.appendChild(card);
+    cards.push(card);
 }
