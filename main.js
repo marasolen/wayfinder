@@ -348,7 +348,13 @@ function initPage() {
     new Slip(pref);
     pref.addEventListener('slip:reorder', function(e) {
            e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
-           console.log(pref);
+		   
+		   // re-color
+		   let separatorY = document.getElementById("separator").offsetTop;
+		   if(e.target.offsetTop < separatorY)
+			   e.target.style.color = "black";
+		   else
+			   e.target.style.color = "gray";
            return false;
     }, false);
 
