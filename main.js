@@ -126,6 +126,8 @@ function showDirections() {
             });
         }
     });
+	
+	document.getElementById("add-route").style.visibility = 'visible';
 }
 
 function setToLoc(name, latLng) {
@@ -317,6 +319,10 @@ function initMap() {
         name: null,
         active: false
     };
+	
+	// one dummy watchlist entry
+	// TODO: add whatever info needed to watchlist[] and pass that to addToWatchlist
+	addToWatchlist("ICICS Building to AMS Student Nest", "E Mall S and Main Mall", "path obstructed");
 }
 
 function initObstructions() {
@@ -406,13 +412,25 @@ function clearLoc(loc) {
     loc.marker.setMap(null);
     loc.name = null;
     loc.active = false;
+	document.getElementById("add-route").style.visibility = 'hidden';
 }
 
 function addThisRoute(){
-    // get two endpoints
-    // get route and route's summary
+    // get two endpoints, route and route's summary
+	let destinations = frLoc.name.split(",")[0] + " to " + toLoc.name.split(",")[0];
+	let route = "TBD";
+	
     // check if route has obstructions
+	let status = "clear"; // default to clear for now
+	/* if(isOnObstruction(polyline) == true)
+		let status = "path obstructed";
+	else
+		let status = "clear";*/
+	
     // call addToWatchlist
+	addToWatchlist(destinations, route, status);
+	
+	// save whatever info needed to show alternative routes in watchlist[]
 }
 
 function addToWatchlist(destinations, route, status){
