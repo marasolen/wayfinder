@@ -127,7 +127,7 @@ function showDirections() {
         }
     });
 	
-	document.getElementById("add-route").style.visibility = 'visible';
+	document.getElementById('add-route').style.visibility = 'visible';
 }
 
 function setToLoc(name, latLng) {
@@ -322,7 +322,7 @@ function initMap() {
 	
 	// one dummy watchlist entry
 	// TODO: add whatever info needed to watchlist[] and pass that to addToWatchlist
-	addToWatchlist("ICICS Building to AMS Student Nest", "E Mall S and Main Mall", "path obstructed");
+	addToWatchlist('ICICS Building to AMS Student Nest', 'E Mall S and Main Mall', 'path obstructed');
 }
 
 function initObstructions() {
@@ -342,6 +342,40 @@ function initObstructions() {
     }
 }
 
+function updateGPS() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            const pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude,
+            };
+
+            if (gpsMarker) {
+                gpsMarker.setMap(null);
+            }
+
+            gpsMarker = new google.maps.Marker({
+                position: pos,
+                map: map,
+                icon: {
+                    path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
+                    scale: 10,
+                    fillOpacity: 1,
+                    strokeWeight: 5,
+                    fillColor: '#0390fc',
+                    strokeColor: '#ffffff',
+                },
+            });
+  
+          },
+          () => {
+              console.log('Failed to get GPS coordinates.')
+          }
+        );
+      }
+}
+
 function initPage() {
     initMap();
     pref = document.getElementById('slippylist');
@@ -350,11 +384,11 @@ function initPage() {
            e.target.parentNode.insertBefore(e.target, e.detail.insertBefore);
 		   
 		   // re-color
-		   let separatorY = document.getElementById("separator").offsetTop;
+		   let separatorY = document.getElementById('separator').offsetTop;
 		   if(e.target.offsetTop < separatorY)
-			   e.target.style.color = "black";
+			   e.target.style.color = 'black';
 		   else
-			   e.target.style.color = "gray";
+			   e.target.style.color = 'gray';
            return false;
     }, false);
 
@@ -365,39 +399,8 @@ function initPage() {
 
     openTab(null, 'map');
 
-    setInterval(function() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (position) => {
-                const pos = {
-                  lat: position.coords.latitude,
-                  lng: position.coords.longitude,
-                };
-
-                if (gpsMarker) {
-                    gpsMarker.setMap(null);
-                }
-
-                gpsMarker = new google.maps.Marker({
-                    position: pos,
-                    map: map,
-                    icon: {
-                        path: google.maps.SymbolPath.BACKWARD_CLOSED_ARROW,
-                        scale: 10,
-                        fillOpacity: 1,
-                        strokeWeight: 5,
-                        fillColor: '#0390fc',
-                        strokeColor: '#ffffff',
-                    },
-                });
-      
-              },
-              () => {
-                  console.log('Failed to get GPS coordinates.')
-              }
-            );
-          }
-    }, 60 * 1000);
+    updateGPS();
+    setInterval(updateGPS, 60 * 1000);
 }
 
 function selectSearchInput() {
@@ -418,20 +421,20 @@ function clearLoc(loc) {
     loc.marker.setMap(null);
     loc.name = null;
     loc.active = false;
-	document.getElementById("add-route").style.visibility = 'hidden';
+	document.getElementById('add-route').style.visibility = 'hidden';
 }
 
 function addThisRoute(){
     // get two endpoints, route and route's summary
-	let destinations = frLoc.name.split(",")[0] + " to " + toLoc.name.split(",")[0];
-	let route = "TBD";
+	let destinations = frLoc.name.split(',')[0] + ' to ' + toLoc.name.split(',')[0];
+	let route = 'TBD';
 	
     // check if route has obstructions
-	let status = "clear"; // default to clear for now
+	let status = 'clear'; // default to clear for now
 	/* if(isOnObstruction(polyline) == true)
-		let status = "path obstructed";
+		let status = 'path obstructed';
 	else
-		let status = "clear";*/
+		let status = 'clear';*/
 	
     // call addToWatchlist
 	addToWatchlist(destinations, route, status);
@@ -441,34 +444,44 @@ function addThisRoute(){
 
 function addToWatchlist(destinations, route, status){
     var id = cards.length;
-    var parent = document.getElementById("watchlist-container")
-	var card = document.createElement("div");
-    card.setAttribute("class", "card");
-    card.setAttribute("id", id);
-    if (status != "clear")
-        card.setAttribute("style", "background-color: #f7e6e4;");
+    var parent = document.getElementById('watchlist-container')
+	var card = document.createElement('div');
+    card.setAttribute('class', 'card');
+    card.setAttribute('id', id);
+    if (status != 'clear')
+        card.setAttribute('style', 'background-color: #f7e6e4;');
 
     // text on the left half
-    let inner = document.createElement("div");
-    inner.setAttribute("style", "width:78%; display:inline-block;");
-    inner.innerHTML = "<p class='tight'>" + destinations + "</p> \
-        <p class='tight' style='font-size:220%'>" + route + "</p> \
-        <p class='tight' style='font-size:220%'>Status: <b>" + status + "</b></p>";
+    let inner = document.createElement('div');
+    inner.setAttribute('style', 'width:78%; display:inline-block;');
+    inner.innerHTML = '<p class="tight">' + destinations + '</p> \
+        <p class="tight" style="font-size:220%">' + route + '</p> \
+        <p class="tight" style="font-size:220%">Status: <b>' + status + '</b></p>';
 
     // buttons on the right half
-    let mapBtn = document.createElement("button");
-    mapBtn.setAttribute("class", "btn");
-    mapBtn.setAttribute("onclick", "openTab(event, 'map')"); // TODO: actually show the route
-    mapBtn.innerHTML = "<i class='fa fa-map-marker'></i>";
+    let mapBtn = document.createElement('button');
+    mapBtn.setAttribute('class', 'btn');
+    mapBtn.setAttribute('onclick', 'openTab(event, "map")'); // TODO: actually show the route
+    mapBtn.innerHTML = '<i class="fa fa-map-marker"></i>';
     
-    let delBtn = document.createElement("button");
-    delBtn.setAttribute("class", "btn");
-    delBtn.setAttribute("onclick", "document.getElementById("+ id +").style.display = 'none'");
-    delBtn.innerHTML = "<i class='fa fa-trash'></i>";
+    let delBtn = document.createElement('button');
+    delBtn.setAttribute('class', 'btn');
+    delBtn.setAttribute('onclick', 'document.getElementById('+ id +').style.display = "none"');
+    delBtn.innerHTML = '<i class="fa fa-trash"></i>';
 
     card.appendChild(inner);
     card.appendChild(mapBtn);
     card.appendChild(delBtn);
     parent.appendChild(card);
     cards.push(card);
+}
+
+function toggleTabs(button) {
+    button.classList.toggle('change');
+    const tabs = document.getElementById('tab-buttons');
+    if (tabs.style.visibility === 'hidden') {
+        tabs.style.visibility = 'visible';
+    } else {
+        tabs.style.visibility = 'hidden';
+    }
 }
