@@ -46,7 +46,7 @@ td {
     color: #3c4043;
     cursor: pointer;
     font-family: arial, sans-serif;
-    font-size: 300%;
+    font-size: 250%;
     text-align: center;
     user-select: none;
     -webkit-user-select: none;
@@ -305,10 +305,18 @@ td {
     box-shadow: rgba(99, 99, 99, 0.2) 0px 0px 8px 0px;
 }
 
+#add-route {
+	position: fixed;
+	top: 65%;
+	left: 65%;
+	font-size:200%;
+	visibility: hidden;
+}
+
 #search-results-container {
     visibility: hidden;
     position: fixed;
-    top: 12%;
+    top: 9em;
     left: 50%;
     transform: translateX(-50%);
     background-color: #fcfcfc;
@@ -330,7 +338,7 @@ td {
 
 #directions {
     position: fixed;
-    top: 70%;
+    top: 73%;
     width: 90%;
     height: 40%;
     left: 50%;

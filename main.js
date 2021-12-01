@@ -27,7 +27,7 @@ let cards = [];
 
 let frLoc;
 let toLoc;
-
+let curRoute;
 let watchlist = [];
 
 // State
@@ -85,12 +85,12 @@ function checkRoutes(result) {
     console.log(result.routes);
     result.routes.forEach(route => {
         promises.push(new Promise((resolve => {
-            const polyline = new google.maps.Polyline({
+            /*const polyline = new google.maps.Polyline({
                 path: route.overview_path
             });
-            if (isOnObstruction(polyline)) {
-                resolve(null);
-            }
+            if (isOnObstruction(polyline)) {;
+                resolve(nul);
+            }*/
             resolve(route);
         })));
     });
@@ -288,6 +288,9 @@ function initMap() {
         suppressMarkers: true,
         preserveViewport: true
     });
+	google.maps.event.addListener(directionsRenderer, 'routeindex_changed', function(){
+		curRoute = this.getDirections().routes[this.getRouteIndex()];   
+	});
 
     initObstructions();
 
@@ -319,10 +322,6 @@ function initMap() {
         name: null,
         active: false
     };
-	
-	// one dummy watchlist entry
-	// TODO: add whatever info needed to watchlist[] and pass that to addToWatchlist
-	addToWatchlist('ICICS Building to AMS Student Nest', 'E Mall S and Main Mall', 'path obstructed');
 }
 
 function initObstructions() {
@@ -424,26 +423,44 @@ function clearLoc(loc) {
 	document.getElementById('add-route').style.visibility = 'hidden';
 }
 
+function copyLatLng(loc){
+	var LatLng = loc.marker.position.toString().replace("(", "").replace(")", "").split(", ")
+	var Lat = parseFloat(LatLng[0]);
+	var Lng = parseFloat(LatLng[1]);
+	return new google.maps.LatLng(Lat, Lng)
+}
+
 function addThisRoute(){
     // get two endpoints, route and route's summary
 	let destinations = frLoc.name.split(',')[0] + ' to ' + toLoc.name.split(',')[0];
-	let route = 'TBD';
+	let route = "Through "+curRoute.summary;
 	
     // check if route has obstructions
-	let status = 'clear'; // default to clear for now
-	/* if(isOnObstruction(polyline) == true)
-		let status = 'path obstructed';
+	let status;
+	const polyline = new google.maps.Polyline({
+                path: curRoute.overview_path
+            });
+	if(isOnObstruction(polyline) == true)
+		status = 'path obstructed';
 	else
-		let status = 'clear';*/
+		status = 'clear';
 	
     // call addToWatchlist
 	addToWatchlist(destinations, route, status);
 	
 	// save whatever info needed to show alternative routes in watchlist[]
+	watchlist.push({from:frLoc.name, fromPos: copyLatLng(frLoc), to:toLoc.name, toPos: copyLatLng(toLoc), route:curRoute});
+}
+
+function reopenMap(id){
+	openTab(null, "map");
+	entry = watchlist[id]
+	setFrLoc(entry.from, entry.fromPos);
+	setToLoc(entry.to, entry.toPos);
 }
 
 function addToWatchlist(destinations, route, status){
-    var id = cards.length;
+    var id = watchlist.length;
     var parent = document.getElementById('watchlist-container')
 	var card = document.createElement('div');
     card.setAttribute('class', 'card');
@@ -461,7 +478,7 @@ function addToWatchlist(destinations, route, status){
     // buttons on the right half
     let mapBtn = document.createElement('button');
     mapBtn.setAttribute('class', 'btn');
-    mapBtn.setAttribute('onclick', 'openTab(event, "map")'); // TODO: actually show the route
+    mapBtn.setAttribute('onclick', 'reopenMap(+'+id+')');
     mapBtn.innerHTML = '<i class="fa fa-map-marker"></i>';
     
     let delBtn = document.createElement('button');
