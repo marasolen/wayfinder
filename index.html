@@ -22,6 +22,7 @@
 			<div id="search-results-container"></div>
         </div>
         <div id="watchlist-container" class="tab-content" style="visibility: hidden;">
+			<p id="noroutes">No routes added yet.</p>
         </div>
         <div id="profile-container" class="tab-content" style="padding:5em; visibility: hidden;">
             <p align="right" style="padding-right:5em; font-size:200%;">Logged in:</br>testCWL</p>
@@ -35,7 +36,6 @@
                 <li style="color:gray">Least elevation</li>
                 <li style="color:gray">Check weather</li>
             </ul>
-            </br>
             <h2>Settings</h2>
             <div>
                 <div class="onoffswitch" style="display: inline-block; float:left;">
@@ -44,12 +44,26 @@
                 </div>
                 <p class="toggle-label">Email notification of obstructions</p>
             </div>
-            <div>
+            <div style="margin-top:-1em">
                 <div class="onoffswitch" style="display: inline-block; float:left;">
                     <input type="checkbox" class="onoffswitch-checkbox" id="gps" tabindex="0" checked>
                     <label class="onoffswitch-label" for="gps"></label>
                 </div>
                 <p class="toggle-label">My location tracking</p>
+            </div>
+			<div style="margin-top:-1em">
+                <div class="onoffswitch" style="display: inline-block; float:left;">
+                    <input type="checkbox" class="onoffswitch-checkbox" id="bluephone" tabindex="0">
+                    <label class="onoffswitch-label" for="bluephone"></label>
+                </div>
+                <p class="toggle-label">Show locations of <a href="https://security.ubc.ca/campus-security-services/blue-phones" target="_blank">UBC Blue Phones</a></p>
+            </div>
+			<div style="margin-top:-1em;width:90%;">
+                <div class="onoffswitch" style="display: inline-block; float:left;">
+                    <input type="checkbox" class="onoffswitch-checkbox" id="shuttle" tabindex="0">
+                    <label class="onoffswitch-label" for="shuttle"></label>
+                </div>
+                <p class="toggle-label">Show <a href="https://students.ubc.ca/about-student-services/centre-for-accessibility/ubc-accessibility-shuttle" target="_blank">UBC Accessibility Shuttle's stops</a></p>
             </div>
         </div>
 

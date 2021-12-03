@@ -14,6 +14,44 @@ const obstructions = [
     { lat: 49.27214915250998, lng: -123.234117813479 },
     { lat: 49.252371958011054, lng: -123.24577727156205}
 ]
+const shuttleLocs = [
+	{ lat: 49.260692761322176 , lng: -123.2492972199509 },
+	{ lat: 49.262837055212714 , lng: -123.24656294816496 },
+	{ lat: 49.26173264907086 , lng: -123.25536132126678 },
+	{ lat: 49.261055733107504 , lng: -123.24796574592602 },
+	{ lat: 49.2653664084989 , lng: -123.25776459898265 },
+	{ lat: 49.266179301183676 , lng: -123.25804692083025 },
+	{ lat: 49.268986695492494 , lng: -123.2560191620369 },
+	{ lat: 49.266789402368985 , lng: -123.25524441159357 },
+	{ lat: 49.26771353119853 , lng: -123.25454701679017 },
+	{ lat: 49.26719161219116 , lng: -123.25323952658488 },
+	{ lat: 49.26830797149617 , lng: -123.25041207205435 },
+	{ lat: 49.26612940493019 , lng: -123.2498931081166 },
+	{ lat: 49.26500924067265 , lng: -123.25335852951727 },
+	{ lat: 49.26419709125739 , lng: -123.25268261500258 }
+]
+const bluephoneLocs = [
+	{ lat: 49.26917774851459 , lng: -123.25548593572059 },
+	{ lat: 49.25606177726062 , lng: -123.2412585380836 },
+	{ lat: 49.25812775113913 , lng: -123.2556955862402 },
+	{ lat: 49.25781033694401 , lng: -123.24805430313965 },
+	{ lat: 49.25932875203801 , lng: -123.24354122112665 },
+	{ lat: 49.26486953089567 , lng: -123.24822649444089 },
+	{ lat: 49.25457529625915 , lng: -123.23916688365581 },
+	{ lat: 49.263005959549766 , lng: -123.23998534577048 },
+	{ lat: 49.25972418455894 , lng: -123.25446435058486 },
+	{ lat: 49.269247320700785 , lng: -123.2471297984455 },
+	{ lat: 49.25725604006446 , lng: -123.24496456781249 },
+	{ lat: 49.26178035570595 , lng: -123.24664181876564 },
+	{ lat: 49.264118206191526 , lng: -123.25034055833041 },
+	{ lat: 49.26935423472392 , lng: -123.24480328365168 },
+	{ lat: 49.260725521838014 , lng: -123.25231116418 },
+	{ lat: 49.25997291239839 , lng: -123.25190557529942 },
+	{ lat: 49.26143285259173 , lng: -123.24220205428924 },
+	{ lat: 49.26268028963878 , lng: -123.25347020467144 },
+	{ lat: 49.26275803696719 , lng: -123.2429632346989 },
+	{ lat: 49.26199742855285 , lng: -123.24416899822852 }
+]
 
 // Objects
 let map;
@@ -24,6 +62,8 @@ let directionsRenderer;
 let pref;
 let gpsMarker;
 let cards = [];
+let bluephones = [];
+let shuttles = [];
 
 let frLoc;
 let toLoc;
@@ -61,13 +101,34 @@ function openTab(_, tabName) {
 
         state.selectedTab = tabName;
 
-         // if opening map, check whether to turn on self-marker
+         // if opening map, check whether to turn on markers
         if (tabName == 'map' && gpsMarker) {
             if (document.getElementById('gps').checked == false)
                 gpsMarker.setVisible(false);
             else
                 gpsMarker.setVisible(true);
         }
+		
+		if (tabName == 'map') {
+            if (document.getElementById('bluephone').checked == false)
+                bluephones.forEach(bp => bp.setVisible(false));
+            else
+                bluephones.forEach(bp => bp.setVisible(true));
+			
+			if (document.getElementById('shuttle').checked == false)
+                shuttles.forEach(st => st.setVisible(false));
+            else
+                shuttles.forEach(st => st.setVisible(true));
+        }
+		
+		// if opening watchlist, check if there's any route
+		if (tabName == 'watchlist'){
+			for (let i = 0; i < cards.length; i++) {
+				console.log(cards[i].style.display);
+				if (cards[i].style.display != "none")
+					document.getElementById("noroutes").style.display = "none"
+			}
+		}
     }
 }
 
@@ -293,6 +354,8 @@ function initMap() {
 	});
 
     initObstructions();
+	initBluePhones();
+	initShuttles();
 
     frLoc = {
         marker: new google.maps.Marker({
@@ -330,14 +393,36 @@ function initObstructions() {
             position: obstructions[i],
             map: map,
             icon: {
-                path: google.maps.SymbolPath.CIRCLE,
-                scale: 12,
-                fillOpacity: 1,
-                strokeWeight: 2,
-                fillColor: '#fc0303',
-                strokeColor: '#ffffff',
+                url: "http://maps.google.com/mapfiles/kml/shapes/caution.png",
+				scaledSize: new google.maps.Size(40, 40)
             },
         });
+    }
+}
+
+function initBluePhones() {
+    for (var i = 0; i < bluephoneLocs.length; i++) {
+        bluephones.push(new google.maps.Marker({
+            position: bluephoneLocs[i],
+            map: map,
+            icon: {
+				url: "https://svg-clipart.com/svg/icon/Bv6TUGR-emergency-telephone-blue-vector.svg",
+				scaledSize: new google.maps.Size(40, 50)
+			}
+        }));
+    }
+}
+
+function initShuttles() {
+    for (var i = 0; i < shuttleLocs.length; i++) {
+        shuttles.push(new google.maps.Marker({
+            position: shuttleLocs[i],
+            map: map,
+            icon: {
+				url: "http://maps.google.com/mapfiles/kml/shapes/bus.png",
+				scaledSize: new google.maps.Size(45, 45)
+			}
+        }));
     }
 }
 
